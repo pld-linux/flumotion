@@ -1,5 +1,5 @@
-#
-Summary:	the Fluendo Streaming Server
+Summary:	The Fluendo Streaming Server
+Summary(pl):	Serwer strumieni Fluendo
 Name:		flumotion
 Version:	0.1.9
 Release:	0.1
@@ -19,6 +19,12 @@ Flumotion is a streaming media server created with the backing of
 Fluendo. It features intuitive graphical administration tools, making
 the task of setting up and manipulating audio and video streams easy
 for even novice system administrators.
+
+%description -l pl
+Flumotion to serwer strumieni multimedialnych stworzony przy poparciu
+Fluendo. Ma intuicyjne graficzne narzêdzia administracyjne, czyni±ce
+zadanie konfiguracji i obróbki strumieni d¼wiêku i obrazu ³atwym nawet
+dla pocz±tkuj±cych administratorów systemów.
 
 %prep
 %setup -q
@@ -45,3 +51,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_sbindir}/ffserver
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
