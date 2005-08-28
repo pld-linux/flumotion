@@ -8,6 +8,7 @@ Group:		Daemons
 Source0:	http://www.flumotion.net/src/flumotion/%{name}-%{version}.tar.bz2
 # Source0-md5:	7f2b4abbabd7756d1d689b38fd477d3e
 URL:		http://www.flumotion.net/
+BuildRequires:	automake
 BuildRequires:	gstreamer-devel >= 0.8
 BuildRequires:	python-pygtk-devel >= 2.4.0
 BuildRequires:	python-gstreamer >= 0.8.2-1
@@ -23,7 +24,7 @@ for even novice system administrators.
 %setup -q
 
 %build
-install %{_datadir}/automake/config.* .
+install /usr/share/automake/config.* .
 %configure
 %{__make}
 
