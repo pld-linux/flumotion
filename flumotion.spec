@@ -1,5 +1,5 @@
 Summary:	The Fluendo Streaming Server
-Summary(pl):	Serwer strumieni Fluendo
+Summary(pl.UTF-8):   Serwer strumieni Fluendo
 Name:		flumotion
 Version:	0.1.9
 Release:	0.1
@@ -20,11 +20,11 @@ Fluendo. It features intuitive graphical administration tools, making
 the task of setting up and manipulating audio and video streams easy
 for even novice system administrators.
 
-%description -l pl
+%description -l pl.UTF-8
 Flumotion to serwer strumieni multimedialnych stworzony przy poparciu
-Fluendo. Ma intuicyjne graficzne narzêdzia administracyjne, czyni±ce
-zadanie konfiguracji i obróbki strumieni d¼wiêku i obrazu ³atwym nawet
-dla pocz±tkuj±cych administratorów systemów.
+Fluendo. Ma intuicyjne graficzne narzÄ™dzia administracyjne, czyniÄ…ce
+zadanie konfiguracji i obrÃ³bki strumieni dÅºwiÄ™ku i obrazu Å‚atwym nawet
+dla poczÄ…tkujÄ…cych administratorÃ³w systemÃ³w.
 
 %prep
 %setup -q
