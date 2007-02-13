@@ -1,5 +1,5 @@
 Summary:	The Fluendo Streaming Server
-Summary(pl.UTF-8):   Serwer strumieni Fluendo
+Summary(pl.UTF-8):	Serwer strumieni Fluendo
 Name:		flumotion
 Version:	0.1.9
 Release:	0.1
