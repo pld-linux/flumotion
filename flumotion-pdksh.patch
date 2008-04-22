@@ -1,0 +1,12 @@
+diff -Nurwa flumotion-0.5.1-vanilla/data/make-dummy-cert flumotion-0.5.1/data/make-dummy-cert
+--- flumotion-0.5.1-vanilla/data/make-dummy-cert	2007-03-01 18:42:18.000000000 +0100
++++ flumotion-0.5.1/data/make-dummy-cert	2008-04-23 00:32:40.980604626 +0200
+@@ -19,7 +19,7 @@
+ for target in $@ ; do
+ 	PEM1=`/bin/mktemp /tmp/openssl.XXXXXX`
+ 	PEM2=`/bin/mktemp /tmp/openssl.XXXXXX`
+-	trap "rm -f $PEM1 $PEM2" SIGINT
++	trap "rm -f $PEM1 $PEM2" INT
+ 	answers | /usr/bin/openssl req -newkey rsa:1024 -keyout $PEM1 -nodes -x509 -days 365 -out $PEM2 2> /dev/null
+ 	cat $PEM1 >  ${target}
+ 	echo ""   >> ${target}
