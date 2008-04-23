@@ -16,37 +16,38 @@ BuildRequires:	python-gstreamer >= 0.10.4
 BuildRequires:	python-TwistedCore >= 2.0.1
 BuildRequires:	python-TwistedNames
 BuildRequires:	python-TwistedWeb
-Requires:		gstreamer-audio-effects-good
-Requires:		gstreamer-libpng
-Requires:		gstreamer-plugins-base >= 0.10.10
-Requires:		python-PIL
-Requires:		python-TwistedCore-ssl
 Requires(pre):	/usr/sbin/useradd
 Requires(post,preun):	/sbin/chkconfig
 Requires(post):	openssl-tools
-Provides:		user(flumotion)
+Requires:	gstreamer-audio-effects-good
+Requires:	gstreamer-libpng
+Requires:	gstreamer-plugins-base >= 0.10.10
+Requires:	python-PIL
+Requires:	python-TwistedCore-ssl
+Provides:	user(flumotion)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Flumotion is a GPL streaming media server written in Python. It is distributed
-and component-based: every step in the streaming process (production,
-conversion, consumption) can be run inside a separate process on separate
-machines.
+Flumotion is a GPL streaming media server written in Python. It is
+distributed and component-based: every step in the streaming process
+(production, conversion, consumption) can be run inside a separate
+process on separate machines.
 
-Flumotion uses a central manager process to control the complete network; one
-or more worker processes distributed over machines to run actual streaming
-components; and one or more admin clients connecting to the manager to control
-it.
+Flumotion uses a central manager process to control the complete
+network; one or more worker processes distributed over machines to run
+actual streaming components; and one or more admin clients connecting
+to the manager to control it.
 
 %description -l pl.UTF-8
-Flumotion to serwer strumieni multimedialnych napisany w Pythonie i udostępniany
-na licencji GPL. Jest to system rozproszony i modularny: każdy etap przetwarzania
-strumienia (produkcja, konwersja, konsumpcja) może być przeprowadzany w osobnym
-procesie i na osobnej maszynie.
+Flumotion to serwer strumieni multimedialnych napisany w Pythonie i
+udostępniany na licencji GPL. Jest to system rozproszony i modularny:
+każdy etap przetwarzania strumienia (produkcja, konwersja, konsumpcja)
+może być przeprowadzany w osobnym procesie i na osobnej maszynie.
 
-Flumotion używa centralnego procesu zarządcy, który kontroluje cały system; jednego
-lub więcej procesu robotnika czuwającego nad komponentami; jednego lub więcej
-klienta administracji, pozwalającego na sprawowanie kontroli przez użytkownika.
+Flumotion używa centralnego procesu zarządcy, który kontroluje cały
+system; jednego lub więcej procesu robotnika czuwającego nad
+komponentami; jednego lub więcej klienta administracji, pozwalającego
+na sprawowanie kontroli przez użytkownika.
 
 %prep
 %setup -q
