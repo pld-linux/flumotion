@@ -1,0 +1,232 @@
+#!/bin/bash
+#
+# Startup script for the Flumotion streaming server
+#
+# flumotion: Flumotion Streaming Server
+#
+# chkconfig: - 80 20
+#
+# description: Flumotion is a streaming server for audio and video. \
+#              See http://www.fluendo.com for details.
+#
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# paths to files and variables
+service=flumotion
+prog=/usr/sbin/flumotion
+lockdir=/var/lock/subsys
+rundir=/var/run/flumotion
+logfile=/var/log/flumotion/service.log
+sysconfig=/etc/sysconfig/flumotion
+
+# source configuration 
+if [ -f $sysconfig ] ; then
+        . $sysconfig
+fi
+
+# to make sure our service log file is always owned by the correct user,
+# we touch it
+touch_logfile() {
+	touch $logfile
+	chown flumotion $logfile
+}
+
+update_lockfile() {
+	# we have the subsys lock iff this script has been run and a
+	# flumotion process is running
+	# see http://www.redhat.com/magazine/008jun05/departments/tips_tricks/
+	if [ -n "`find $rundir -name 'manager.*.pid' -o -name 'worker.*.pid'`" ]
+	then
+		touch ${lockdir}/flumotion
+	else
+		rm -f ${lockdir}/flumotion
+	fi
+}
+
+# if arguments are specified, we only start/stop that service part
+start() {
+	if test "x$*" != "x"
+	then
+		startone $*
+		return $?
+	fi
+
+	RETVAL=0
+	$prog status | cut -f1,2 -d' ' | while read type name
+	do
+		startone $type $name || RETVAL=1
+	done
+	return $RETVAL
+}
+
+startone() {
+	type=$1
+	name=$2
+
+	if test "x$name" == "x"
+	then
+		echo $"Please specify a $type name"
+		exit 1
+	fi
+
+	msg_starting "Flumotion $type $name"
+	daemon --user flumotion $prog -d 3 -l $logfile start $type $name
+	RETVAL=$?
+	[ $RETVAL = 0 ] && update_lockfile
+	return $RETVAL
+}
+
+stop() {
+	if test "x$*" != "x"
+	then
+		stopone $*
+		return $?
+	fi
+
+	RETVAL=0
+	$prog status | cut -f1,2 -d' ' | while read type name
+	do
+		if test -e ${rundir}/$type.$name.pid
+		then
+		    stopone $type $name || RETVAL=1
+		fi
+	done
+	return $RETVAL
+}
+
+stopone() {
+	type=$1
+	name=$2
+
+	if test "x$name" == "x"
+	then
+		echo $"Please specify a $type name"
+		exit 1
+	fi
+
+	touch_logfile
+
+	RETVAL=0
+	msg_stopping "Flumotion $type $name"
+	busy
+	$prog stop -d 3 -l $logfile $type $name
+	RETVAL=$?
+	[ $RETVAL = 0 ] && ok || died
+	[ $RETVAL = 0 ] && update_lockfile
+
+	return $RETVAL
+}
+
+
+condrestart() {
+	if test "x$*" != "x"
+	then
+		condrestartone $*
+		return $?
+	fi
+
+	RETVAL=0
+	$prog status | cut -f1,2 -d' ' | while read type name
+	do
+		if test -e ${rundir}/$type.$name.pid
+		then
+		    condrestartone $type $name || RETVAL=1
+		fi
+	done
+	return $RETVAL
+}
+
+condrestartone() {
+	type=$1
+	name=$2
+
+	if test "x$name" == "x"
+	then
+		echo $"Please specify a $type name"
+		exit 1
+	fi
+
+	if test -e ${rundir}/$type.$name.pid
+	then
+	    stopone $type $name || RETVAL=1
+	    startone $type $name || RETVAL=1
+	fi
+
+	return $RETVAL
+}
+
+status() {
+        touch_logfile
+	if test "x$*" != "x"
+	then
+		statusone $*
+		return $?
+	fi
+	$prog status
+}
+
+statusone() {
+	type=$1
+	name=$2
+
+	if test "x$name" == "x"
+	then
+		echo $"Please specify a $type name"
+		exit 1
+	fi
+
+	touch_logfile
+
+	$prog status $type $name
+	RETVAL=$?
+	return $RETVAL
+}
+
+clean() {
+        touch_logfile
+	$prog clean
+}
+
+list() {
+        touch_logfile
+	$prog list
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	shift
+	start $*
+	;;
+  stop)
+	shift
+	stop $*
+	;;
+# FIXME: now that we have condrestart, maybe restart should also handle
+# stop/start per process, instead of global stop and global start ?
+  restart)
+	shift
+	stop $*
+	start $*
+	;;
+  condrestart)
+	shift
+	condrestart $*
+	;;
+  status)
+	shift
+	status $*
+	;;
+  clean)
+        clean
+	;;
+  list)
+        list
+	;;
+  *)
+	echo $"Usage: $service {start|stop|restart|list|status|clean}"
+	exit 1
+esac
+
+exit $RETVAL

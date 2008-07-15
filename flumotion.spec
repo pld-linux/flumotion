@@ -2,11 +2,12 @@ Summary:	The Fluendo Streaming Server
 Summary(pl.UTF-8):	Serwer strumieni Fluendo
 Name:		flumotion
 Version:	0.5.1
-Release:	0.3
+Release:	0.4
 License:	GPL
 Group:		Daemons
 Source0:	http://www.flumotion.net/src/flumotion/%{name}-%{version}.tar.bz2
 # Source0-md5:	70256d8d80a0d5cda61e468116ff8be2
+Source1:	%{name}.init
 Patch0:		%{name}-pdksh.patch
 URL:		http://www.flumotion.net/
 BuildRequires:	automake
@@ -67,9 +68,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/flumotion
 
 # install service files
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d
-install -m 755 \
-	doc/redhat/flumotion \
-	$RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d
+install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/%{name}
 
 # create log and run and cache directory
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log/flumotion
