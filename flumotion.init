@@ -36,8 +36,7 @@ update_lockfile() {
 	# we have the subsys lock iff this script has been run and a
 	# flumotion process is running
 	# see http://www.redhat.com/magazine/008jun05/departments/tips_tricks/
-	if [ -n "`find $rundir -name 'manager.*.pid' -o -name 'worker.*.pid'`" ]
-	then
+	if [ -n "`find $rundir -name 'manager.*.pid' -o -name 'worker.*.pid'`" ]; then
 		touch ${lockdir}/flumotion
 	else
 		rm -f ${lockdir}/flumotion
@@ -46,15 +45,13 @@ update_lockfile() {
 
 # if arguments are specified, we only start/stop that service part
 start() {
-	if test "x$*" != "x"
-	then
+	if [ "x$*" != "x" ]; then
 		startone $*
 		return $?
 	fi
 
 	RETVAL=0
-	$prog status | cut -f1,2 -d' ' | while read type name
-	do
+	$prog status | cut -f1,2 -d' ' | while read type name; do
 		startone $type $name || RETVAL=1
 	done
 	return $RETVAL
@@ -64,8 +61,7 @@ startone() {
 	type=$1
 	name=$2
 
-	if test "x$name" == "x"
-	then
+	if [ "x$name" == "x" ]; then
 		nls "Please specify a $type name"
 		exit 1
 	fi
@@ -78,17 +74,14 @@ startone() {
 }
 
 stop() {
-	if test "x$*" != "x"
-	then
+	if [ "x$*" != "x" ]; then
 		stopone $*
 		return $?
 	fi
 
 	RETVAL=0
-	$prog status | cut -f1,2 -d' ' | while read type name
-	do
-		if test -e ${rundir}/$type.$name.pid
-		then
+	$prog status | cut -f1,2 -d' ' | while read type name; do
+		if [ -e ${rundir}/$type.$name.pid ]; then
 		    stopone $type $name || RETVAL=1
 		fi
 	done
@@ -99,8 +92,7 @@ stopone() {
 	type=$1
 	name=$2
 
-	if test "x$name" == "x"
-	then
+	if [ "x$name" == "x" ]; then
 		nls "Please specify a $type name"
 		exit 1
 	fi
@@ -119,17 +111,14 @@ stopone() {
 }
 
 condrestart() {
-	if test "x$*" != "x"
-	then
+	if [ "x$*" != "x" ]; then
 		condrestartone $*
 		return $?
 	fi
 
 	RETVAL=0
-	$prog status | cut -f1,2 -d' ' | while read type name
-	do
-		if test -e ${rundir}/$type.$name.pid
-		then
+	$prog status | cut -f1,2 -d' ' | while read type name; do
+		if [ -e ${rundir}/$type.$name.pid ]; then
 		    condrestartone $type $name || RETVAL=1
 		fi
 	done
@@ -140,14 +129,12 @@ condrestartone() {
 	type=$1
 	name=$2
 
-	if test "x$name" == "x"
-	then
+	if [ "x$name" == "x" ]; then
 		nls "Please specify a $type name"
 		exit 1
 	fi
 
-	if test -e ${rundir}/$type.$name.pid
-	then
+	if [ -e ${rundir}/$type.$name.pid ]; then
 	    stopone $type $name || RETVAL=1
 	    startone $type $name || RETVAL=1
 	fi
@@ -156,9 +143,8 @@ condrestartone() {
 }
 
 status() {
-        touch_logfile
-	if test "x$*" != "x"
-	then
+	touch_logfile
+	if [ "x$*" != "x" ]; then
 		statusone $*
 		return $?
 	fi
@@ -169,8 +155,7 @@ statusone() {
 	type=$1
 	name=$2
 
-	if test "x$name" == "x"
-	then
+	if [ "x$name" == "x" ]; then
 		nls "Please specify a $type name"
 		exit 1
 	fi
@@ -183,12 +168,12 @@ statusone() {
 }
 
 clean() {
-        touch_logfile
+	touch_logfile
 	$prog clean
 }
 
 list() {
-        touch_logfile
+	touch_logfile
 	$prog list
 }
 
@@ -218,14 +203,14 @@ case "$1" in
 	status $*
 	;;
   clean)
-        clean
+	clean
 	;;
   list)
-        list
+	list
 	;;
   *)
-	echo $"Usage: $service {start|stop|restart|try-restart|force-reload|list|status|clean}"
-	exit 1
+	msg_usage "$0 {start|stop|restart|try-restart|force-reload|list|status|clean}"
+	exit 3
 esac
 
 exit $RETVAL
